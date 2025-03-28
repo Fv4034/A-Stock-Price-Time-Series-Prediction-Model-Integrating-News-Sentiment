@@ -1,0 +1,59 @@
+为了更清晰地解释代码中计算加权平均情感分数的过程，我们可以用数学公式来表示。假设我们有 \( n \) 个情感类别，每个类别的情感得分为 \( s_i \)（其中 \( i \) 表示类别的索引，范围从 0 到 \( n-1 \)）。每个类别的权重为 \( w_i \)（通常为 \( i+1 \)）。
+
+加权平均情感分数的计算公式如下：
+
+\[
+\text{加权平均情感分数} = \frac{\sum_{i=0}^{n-1} s_i \cdot w_i}{\sum_{i=0}^{n-1} w_i}
+\]
+
+在代码中，由于 \( w_i = i+1 \)，我们可以简化公式为：
+
+\[
+\text{加权平均情感分数} = \sum_{i=0}^{n-1} s_i \cdot (i+1)
+\]
+
+对于我们的模型来说，情感类别数 \( n \) 为 5（非常负面、负面、中性、正面、非常正面），因此公式为：
+
+\[
+\text{加权平均情感分数} = s_0 \cdot 1 + s_1 \cdot 2 + s_2 \cdot 3 + s_3 \cdot 4 + s_4 \cdot 5
+\]
+
+### 示例
+
+假设我们有一条新闻的情感分数为：
+
+\[ s = [0.1, 0.2, 0.3, 0.15, 0.25] \]
+
+使用上述公式计算加权平均情感分数：
+
+\[
+\text{加权平均情感分数} = 0.1 \cdot 1 + 0.2 \cdot 2 + 0.3 \cdot 3 + 0.15 \cdot 4 + 0.25 \cdot 5
+\]
+
+计算过程：
+
+\[
+= 0.1 \cdot 1 + 0.2 \cdot 2 + 0.3 \cdot 3 + 0.15 \cdot 4 + 0.25 \cdot 5
+\]
+\[
+= 0.1 + 0.4 + 0.9 + 0.6 + 1.25
+\]
+\[
+= 3.25
+\]
+
+因此，该新闻的加权平均情感分数为 3.25。
+
+在代码中，我们用以下方式实现了这个计算：
+
+```python
+def calculate_weighted_average(row):
+    try:
+        scores = ast.literal_eval(row['Sentiment_Scores'])
+    except:
+        scores = list(map(float, row['Sentiment_Scores'][1:-1].split()))
+    weighted_average = sum(score * (i + 1) for i, score in enumerate(scores))
+    return weighted_average
+```
+
+这个函数对每一行数据计算加权平均情感分数，并将结果存储在 `Weighted_Average_Score` 列中。
